@@ -15,7 +15,5 @@ install:
   - zef install git://github.com/frithnanth/raku-Math-Libgsl-Constants.git
   - zef install git://github.com/frithnanth/raku-Math-Libgsl-Matrix.git
   - zef install git://github.com/frithnanth/raku-Math-Libgsl-Permutation.git
-  - zef build .
-  - ls -R src resources
 script:
   - PERL6LIB=$PWD/lib prove -e perl6 -vr t/*.rakutest

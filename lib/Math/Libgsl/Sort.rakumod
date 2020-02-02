@@ -96,8 +96,6 @@ sub num64vector-largest-index(Math::Libgsl::Vector $v, Int $k? where * < $v.vect
 
 =begin pod
 
-[![Build Status](https://travis-ci.org/frithnanth/raku-Math-Libgsl-Sort.svg?branch=master)](https://travis-ci.org/frithnanth/raku-Math-Libgsl-Sort)
-
 =head1 NAME
 
 Math::Libgsl::Sort - An interface to libgsl, the Gnu Scientific Library - Sort.
