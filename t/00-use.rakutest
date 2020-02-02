@@ -1,0 +1,27 @@
+#!/usr/bin/env perl6
+
+use Test;
+use lib 'lib';
+
+use-ok 'Math::Libgsl::Raw::Sort';
+use-ok 'Math::Libgsl::Raw::Sort::Num32';
+use-ok 'Math::Libgsl::Raw::Sort::Int32';
+use-ok 'Math::Libgsl::Raw::Sort::Int64';
+use-ok 'Math::Libgsl::Raw::Sort::Int16';
+use-ok 'Math::Libgsl::Raw::Sort::Int8';
+use-ok 'Math::Libgsl::Raw::Sort::UInt32';
+use-ok 'Math::Libgsl::Raw::Sort::UInt64';
+use-ok 'Math::Libgsl::Raw::Sort::UInt16';
+use-ok 'Math::Libgsl::Raw::Sort::UInt8';
+use-ok 'Math::Libgsl::Sort';
+use-ok 'Math::Libgsl::Sort::Num32';
+use-ok 'Math::Libgsl::Sort::Int32';
+use-ok 'Math::Libgsl::Sort::Int64';
+use-ok 'Math::Libgsl::Sort::Int16';
+use-ok 'Math::Libgsl::Sort::Int8';
+use-ok 'Math::Libgsl::Sort::UInt32';
+use-ok 'Math::Libgsl::Sort::UInt64';
+use-ok 'Math::Libgsl::Sort::UInt16';
+use-ok 'Math::Libgsl::Sort::UInt8';
+
+done-testing;

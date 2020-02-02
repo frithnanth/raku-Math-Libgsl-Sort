@@ -1,0 +1,86 @@
+#!/usr/bin/env perl6
+
+use Test;
+use lib 'lib';
+use Math::Libgsl::Raw::Sort :ALL;
+use Math::Libgsl::Raw::Matrix :ALL;
+use Math::Libgsl::Raw::Permutation :ALL;
+use Math::Libgsl::Constants;
+use NativeCall;
+
+subtest {
+  my CArray[num64] $a .= new: (^20).reverse».Num;
+  gsl_sort($a, 2, 10);
+  is-deeply $a.list, (1e0, 18e0, 3e0, 16e0, 5e0, 14e0, 7e0, 12e0, 9e0, 10e0, 11e0, 8e0, 13e0, 6e0, 15e0, 4e0, 17e0, 2e0, 19e0, 0e0), 'sort an array with stride';
+  my CArray[num64] $a1 .= new: (^20).reverse».Num;
+  my CArray[num64] $a2 .= new: (^30)».Num;
+  gsl_sort2($a1, 2, $a2, 3, 10);
+  is-deeply $a1.list, (1e0, 18e0, 3e0, 16e0, 5e0, 14e0, 7e0, 12e0, 9e0, 10e0, 11e0, 8e0, 13e0, 6e0, 15e0, 4e0, 17e0, 2e0, 19e0, 0e0), 'sort2 two arrays with stride - first array';
+  is-deeply $a2.list, (27e0, 1e0, 2e0, 24e0, 4e0, 5e0, 21e0, 7e0, 8e0, 18e0, 10e0, 11e0, 15e0, 13e0, 14e0, 12e0, 16e0, 17e0, 9e0, 19e0, 20e0, 6e0, 22e0, 23e0, 3e0, 25e0, 26e0, 0e0, 28e0, 29e0), 'sort2 two arrays with stride - second array';
+  my CArray[num64] $a3 .= new: (^20).reverse».Num;
+  my $p = CArray[size_t].allocate(10);
+  gsl_sort_index($p, $a3, 2, 10);
+  is-deeply $p.list, (9, 8, 7, 6, 5, 4, 3, 2, 1, 0), 'sort an array returning the permutation';
+}, 'raw - sorting array';
+
+subtest {
+  my gsl_vector $v = gsl_vector_calloc(10);
+  gsl_vector_set($v, $_, 10e0 - $_) for ^10;
+  gsl_sort_vector($v);
+  is-deeply (gather take gsl_vector_get($v, $_) for ^10), (1..10)».Num, 'sort a vector';
+  my gsl_vector $v1 = gsl_vector_calloc(10);
+  gsl_vector_set($v1, $_, 10e0 - $_) for ^10;
+  my gsl_vector $v2 = gsl_vector_calloc(10);
+  gsl_vector_set($v2, $_, 15e0 - $_) for ^10;
+  gsl_sort_vector2($v1, $v2);
+  is-deeply (gather take gsl_vector_get($v2, $_) for ^10), (6, 7, 8, 9, 10, 11, 12, 13, 14, 15)».Num, 'sort two vectors';
+  my gsl_vector $v3 = gsl_vector_calloc(10);
+  gsl_vector_set($v3, $_, 10e0 - $_) for ^10;
+  my $p = gsl_permutation_calloc(10);
+  gsl_sort_vector_index($p, $v3);
+  is-deeply $p.data[^10], (9, 8, 7, 6, 5, 4, 3, 2, 1, 0), 'sort a vector returning the permutation';
+}, 'raw - sorting vector';
+
+subtest {
+  my CArray[num64] $src1 .= new: (^20).reverse».Num;
+  my $dest1 = CArray[num64].allocate(5);
+  gsl_sort_smallest($dest1, 5, $src1, 2, 10);
+  is-deeply $dest1.list, (1e0, 3e0, 5e0, 7e0, 9e0), 'sort and select the smallest elements';
+  my CArray[num64] $src2 .= new: (^20).reverse».Num;
+  my $dest2 = CArray[num64].allocate(5);
+  gsl_sort_largest($dest2, 5, $src2, 2, 10);
+  is-deeply $dest2.list, (19e0, 17e0, 15e0, 13e0, 11e0), 'sort and select the largest elements';
+  my CArray[num64] $src3 .= new: (^20).reverse».Num;
+  my $p3 = CArray[size_t].allocate(5);
+  gsl_sort_smallest_index($p3, 5, $src3, 2, 10);
+  is-deeply $p3.list, (9, 8, 7, 6, 5), 'sort and select indices of the smallest elements';
+  my CArray[num64] $src4 .= new: (^20).reverse».Num;
+  my $p4 = CArray[size_t].allocate(5);
+  gsl_sort_largest_index($p4, 5, $src4, 2, 10);
+  is-deeply $p4.list, (0, 1, 2, 3, 4), 'sort and select indices of the largest elements';
+}, 'raw - selecting array elements';
+
+subtest {
+  my gsl_vector $v1 = gsl_vector_calloc(10);
+  gsl_vector_set($v1, $_, 10e0 - $_) for ^10;
+  my $dest1 = CArray[num64].allocate(5);
+  gsl_sort_vector_smallest($dest1, 5, $v1);
+  is-deeply $dest1.list, (1e0, 2e0, 3e0, 4e0, 5e0), 'sort and select the smallest elements';
+  my gsl_vector $v2 = gsl_vector_calloc(10);
+  gsl_vector_set($v2, $_, 10e0 - $_) for ^10;
+  my $dest2 = CArray[num64].allocate(5);
+  gsl_sort_vector_largest($dest2, 5, $v2);
+  is-deeply $dest2.list, (10e0, 9e0, 8e0, 7e0, 6e0), 'sort and select the largest elements';
+  my gsl_vector $v3 = gsl_vector_calloc(10);
+  gsl_vector_set($v3, $_, 10e0 - $_) for ^10;
+  my $p3 = CArray[size_t].allocate(5);
+  gsl_sort_vector_smallest_index($p3, 5, $v3);
+  is-deeply $p3.list, (9, 8, 7, 6, 5), 'sort and select indices of the smallest elements';
+  my gsl_vector $v4 = gsl_vector_calloc(10);
+  gsl_vector_set($v4, $_, 10e0 - $_) for ^10;
+  my $p4 = CArray[size_t].allocate(5);
+  gsl_sort_vector_largest_index($p4, 5, $v4);
+  is-deeply $p4.list, (0, 1, 2, 3, 4), 'sort and select indices of the smallest elements';
+}, 'raw - selecting vector elements';
+
+done-testing;

@@ -1,0 +1,61 @@
+#!/usr/bin/env perl6
+
+use Test;
+use lib 'lib';
+use Math::Libgsl::Sort;
+use Math::Libgsl::Vector;
+use Math::Libgsl::Permutation;
+use Math::Libgsl::Constants;
+
+subtest {
+  my @data = (10…0)».Num;
+  is-deeply num64sort(:@data), (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)».Num, 'sort an array';
+  is-deeply num64sort(:@data, :2stride), (0, 9, 2, 7, 4, 5, 6, 3, 8, 1, 10)».Num, 'sort an array with stride';
+  my @data1 = (10…0)».Num;
+  my @data2 = (20…0)».Num;
+  my %out = num64sort2(:@data1, :2stride1, :@data2, :3stride2);
+  is-deeply %out<data1>, (0, 9, 2, 7, 4, 5, 6, 3, 8, 1, 10)».Num, 'double sort - 1st array';
+  is-deeply %out<data2>, (5, 19, 18, 8, 16, 15, 11, 13, 12, 14, 10, 9, 17, 7, 6, 20, 4, 3, 2, 1, 0)».Num, 'double sort - 2nd array';
+  my @data3 = (^20).reverse».Num;
+  is-deeply num64sort-index(:data(@data3), :2stride), (9, 8, 7, 6, 5, 4, 3, 2, 1, 0), 'sort an array returning the permutation';
+}, 'sorting array';
+
+subtest {
+  my Math::Libgsl::Vector $v .= new: 10;
+  $v.set($_, (10 - $_).Num) for ^10;
+  num64sort-vector($v);
+  is-deeply $v[^10], (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)».Num, 'sort a vector';
+  my Math::Libgsl::Vector $v1 .= new: 10;
+  $v1.set($_, (10 - $_).Num) for ^10;
+  my Math::Libgsl::Vector $v2 .= new: 10;
+  $v2.set($_, (15 - $_).Num) for ^10;
+  num64sort2-vector($v1, $v2);
+  is-deeply (gather take $v2[$_] for ^10), (6, 7, 8, 9, 10, 11, 12, 13, 14, 15)».Num, 'sort two vectors';
+  my Math::Libgsl::Vector $v3 .= new: 10;
+  $v3.set($_, (10 - $_).Num) for ^10;
+  my Math::Libgsl::Permutation $p .= new: 10;
+  num64sort-vector-index($v3, $p);
+  is-deeply $p.all, (9, 8, 7, 6, 5, 4, 3, 2, 1, 0), 'sort a vector returning the permutation';
+  my Math::Libgsl::Permutation $p1 .= new: 11;
+  dies-ok { num64sort-vector-index($v3, $p1) }, "can't manage different-sized vector and permutation";
+}, 'sorting vector';
+
+subtest {
+  my @data = (10…0)».Num;
+  is-deeply num64smallest(:@data, :2stride, :3k), (0, 2, 4)».Num, 'sort and select the smallest elements';
+  dies-ok { num64smallest(:@data, :2stride, :11k) }, "can't select more than the array elements";
+  is-deeply num64largest(:@data, :2stride, :3k), (10, 8, 6)».Num, 'sort and select the largest elements';
+  is-deeply num64smallest-index(:@data, :2stride, :3k), (5, 4, 3), 'sort and select indices of the smallest elements';
+  is-deeply num64largest-index(:@data, :2stride, :3k), (0, 1, 2), 'sort and select indices of the largest elements';
+}, 'selecting array elements';
+
+subtest {
+  my Math::Libgsl::Vector $v .= new: 10;
+  $v.set($_, (10 - $_).Num) for ^10;
+  is-deeply num64vector-smallest($v, 3), (1, 2, 3)».Num, 'sort and select the smallest elements';
+  is-deeply num64vector-largest($v, 3), (10, 9, 8)».Num, 'sort and select the largest elements';
+  is-deeply num64vector-smallest-index($v, 3), (9, 8, 7), 'sort and select indices of the smallest elements';
+  is-deeply num64vector-largest-index($v, 3), (0, 1, 2), 'sort and select indices of the largest elements';
+}, 'selecting vector elements';
+
+done-testing;
