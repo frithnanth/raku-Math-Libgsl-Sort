@@ -36,7 +36,7 @@
     "Math::Libgsl::Sort::UInt8" : "lib/Math/Libgsl/Sort/UInt8.rakumod"
   },
   "resources" : [ ],
-  "source-url" : "git://github.com/frithnanth/perl6-Math-Libgsl-Sort.git",
+  "source-url" : "git://github.com/frithnanth/raku-Math-Libgsl-Sort.git",
   "tags" : [
     "math",
     "nativecall"
