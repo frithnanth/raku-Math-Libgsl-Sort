@@ -1,6 +1,6 @@
 use v6.c;
 
-unit class Math::Libgsl::Sort::UInt8:ver<0.0.1>:auth<cpan:FRITH>;
+unit class Math::Libgsl::Sort::UInt8:ver<0.0.2>:auth<cpan:FRITH>;
 
 use Math::Libgsl::Raw::Sort::UInt8 :ALL;
 use Math::Libgsl::Vector;
