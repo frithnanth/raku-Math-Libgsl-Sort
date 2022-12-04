@@ -1,6 +1,6 @@
 use v6.c;
 
-unit class Math::Libgsl::Sort:ver<0.0.2>:auth<cpan:FRITH>;
+unit class Math::Libgsl::Sort:ver<0.0.2>:auth<zef:FRITH>;
 
 use Math::Libgsl::Raw::Sort :ALL;
 use Math::Libgsl::Vector;
@@ -102,7 +102,7 @@ Math::Libgsl::Sort - An interface to libgsl, the Gnu Scientific Library - Sort.
 
 =head1 SYNOPSIS
 
-=begin code :lang<perl6>
+=begin code :lang<raku>
 
 use Math::Libgsl::Raw::Sort :ALL;
 
@@ -220,7 +220,7 @@ The excellent C Library manual is available here L<https://www.gnu.org/software/
 
 This module requires the libgsl library to be installed. Please follow the instructions below based on your platform:
 
-=head2 Debian Linux and Ubuntu 20.04
+=head2 Debian Linux and Ubuntu 20.04+
 
 =begin code
 sudo apt install libgsl23 libgsl-dev libgslcblas0
