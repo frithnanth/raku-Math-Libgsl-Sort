@@ -1,6 +1,6 @@
 use v6.c;
 
-unit class Math::Libgsl::Sort::Int64:ver<0.0.2>:auth<zef:FRITH>;
+unit class Math::Libgsl::Sort::Int64:ver<0.0.3>:auth<zef:FRITH>;
 
 use Math::Libgsl::Raw::Sort::Int64 :ALL;
 use Math::Libgsl::Vector;

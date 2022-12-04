@@ -1,6 +1,8 @@
 Revision history for Math-Libgsl-Sort
 
 {{$NEXT}}
+
+0.0.3  2022-12-04T12:08:03+01:00
     - Use zef ecosystem
     - Use Github CI
     - Use Distribution::Builder::MakeFromJSON to compile resources
